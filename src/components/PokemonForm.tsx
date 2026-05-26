@@ -1,15 +1,22 @@
 import { useState } from "react";
+import type { GameState } from "./hooks/use-game-manager";
 
-export const PokemonForm = () => {
+interface Props {
+  handlePokemonNameSubmit: (userInput: string) => void;
+  gameState: GameState;
+}
+
+const PokemonForm = ({handlePokemonNameSubmit, gameState}: Props) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleSubmit = (e: React.formEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!inputValue.trim()) {
       console.log("Input is empty");
       return;
     }
-
-    console.log("Searching for Pokémon: ${inputValue}");
+    handlePokemonNameSubmit(inputValue.trim().toLowerCase());
+    setInputValue("");
   };
 
   return (
@@ -22,11 +29,12 @@ export const PokemonForm = () => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         autoFocus
+        disabled={gameState !== "playing"}
       />
       <button
         className="btn btn-outline-secondary"
         type="submit"
-        disabled={!inputValue.trim()}
+        disabled={!inputValue.trim() || gameState !== "playing"}
         // onClick={hanndleClick}
       >
         Comprobar
@@ -34,3 +42,5 @@ export const PokemonForm = () => {
     </form>
   );
 };
+
+export default PokemonForm;

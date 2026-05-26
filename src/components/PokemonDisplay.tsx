@@ -1,19 +1,32 @@
+import { GameState } from "./hooks/use-game-manager";
+import { Spinner } from "./Spinner";
+import type { Pokemon } from "./types/pokemon.interface";
 
+interface Props { 
+    pokemon: Pokemon | null;
+    isLoading: boolean;
+    gameState: GameState;
+}
 
-export const PokemonDisplay = () => {
-    const image = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png";
-    const name = "Bulbasur"
+const PokemonDisplay = ({pokemon, isLoading, gameState}: Props) => {
+    const showAnswar = gameState !== GameState.Playing; 
+    const image = pokemon?.image
+    const name = pokemon?.name
 
-    const showAnswar = false; 
+    console.log(name);
+    
 
   return (
     <div className="card">
       <div className="card-header">
         <h1 className="text-center">
-            {showAnswar ? name.toUpperCase() : "Guess the Pokémon"}
+            {showAnswar ? name?.toUpperCase() : "Guess the Pokémon"}
         </h1>
       </div>
       <div className="card-body">
+        {isLoading ?(
+            <Spinner />
+        ) : (
         <img
           src={image}
           alt=""
@@ -24,7 +37,9 @@ export const PokemonDisplay = () => {
             transition: "filter 0.3s ease-in-out"
           }}
         />
+        )}
       </div>
     </div>
   );
 };
+export default PokemonDisplay;
